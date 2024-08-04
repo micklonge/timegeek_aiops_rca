@@ -1,0 +1,63 @@
+CREATE (SH:Province {name:'ShangHai'})
+CREATE (BJ:Province {name:'BeiJing'})
+ 
+CREATE (DC_SH:DataCenter {name:'ShangHai DataCenter'})
+CREATE (DC_BJ:DataCenter {name:'BeiJing DataCenter'})
+CREATE
+(DC_SH)-[:LOCATED_IN]->(SH),
+(DC_BJ)-[:LOCATED_IN]->(BJ)
+ 
+CREATE (SHBS:BaseStation {name:'ShangHai BaoShan'})
+CREATE (SHJD:BaseStation {name:'ShangHai JiaDing'})
+CREATE (BJHD:BaseStation {name:'BeiJing HaiDian'})
+CREATE
+(SHBS)-[:LOCATED_IN]->(SH),
+(SHJD)-[:LOCATED_IN]->(SH),
+(BJHD)-[:LOCATED_IN]->(BJ)
+ 
+CREATE (SSH1:Server {name:'172.168.0.2'})
+CREATE (SSH2:Server {name:'172.168.0.3'})
+CREATE (SSH3:Server {name:'172.168.0.4'})
+CREATE
+(SSH1)-[:DEPOSIT]->(DC_SH),
+(SSH2)-[:DEPOSIT]->(DC_SH),
+(SSH3)-[:DEPOSIT]->(DC_SH)
+ 
+CREATE (SBJ1:Server {name:'172.168.1.2'})
+CREATE (SBJ2:Server {name:'172.168.1.3'})
+CREATE (SBJ3:Server {name:'172.168.1.4'})
+CREATE
+(SBJ1)-[:DEPOSIT]->(DC_BJ),
+(SBJ2)-[:DEPOSIT]->(DC_BJ),
+(SBJ3)-[:DEPOSIT]->(DC_BJ)
+ 
+CREATE (ASH1:Application {app:'app1', name:'172.168.0.2'})
+CREATE (ASH2:Application {app:'app2', name:'172.168.0.3'})
+CREATE (ASH3:Application {app:'app3', name:'172.168.0.4'})
+CREATE
+(ASH1)-[:RUN]->(SSH1),
+(ASH2)-[:RUN]->(SSH2),
+(ASH3)-[:RUN]->(SSH3),
+(SHBS)-[:REQ]->(ASH1),
+(SHJD)-[:REQ]->(ASH1),
+(ASH1)-[:REQ]->(ASH2),
+(ASH2)-[:REQ]->(ASH3)
+ 
+CREATE (ABJ1:Application {app:'app1', name:'172.168.1.2'})
+CREATE (ABJ2:Application {app:'app2', name:'172.168.1.3'})
+CREATE (ABJ3:Application {app:'app3', name:'172.168.1.4'})
+CREATE
+(ABJ1)-[:RUN]->(SBJ1),
+(ABJ2)-[:RUN]->(SBJ2),
+(ABJ3)-[:RUN]->(SBJ3),
+(BJHD)-[:REQ]->(ABJ1),
+(ABJ1)-[:REQ]->(ABJ2),
+(ABJ2)-[:REQ]->(ABJ3)
+ 
+CREATE (TBJ1:Task {name:'decoder'})
+CREATE (TBJ2:Task {name:'computer'})
+CREATE
+(ABJ1)-[:CREATE]->(TBJ1),
+(ABJ2)-[:CREATE]->(TBJ2),
+(BJHD)-[:DATA]->(TBJ1),
+(TBJ1)-[:DATA]->(TBJ2)
